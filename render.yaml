@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: story2video-ai
+    runtime: node
+    plan: free
+    buildCommand: echo "no build step"
+    startCommand: node server.js
+    healthCheckPath: /health
+    envVars:
+      - key: OPENAI_API_KEY      # SECRET: Render asks you to paste it during setup (never stored in the repo)
+        sync: false
+      - key: ACCESS_PASSWORD     # SECRET: password for the whole site; pick any strong password
+        sync: false
+      - key: IMAGE_MODEL
+        value: gpt-image-2.5-sunburst
+      - key: IMAGE_QUALITY
+        value: medium
+      - key: MAX_IMAGES_PER_HOUR
+        value: "60"
+      - key: NODE_VERSION
+        value: "20"

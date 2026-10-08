@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Story2Video AI</title>
+<style>
+:root{--bg:#07080d;--p:#10121b;--p2:#171a26;--b:#262a3a;--t:#e8eaf3;--m:#8c92aa;--a:#8b5cf6;--a2:#22d3ee;--g:linear-gradient(135deg,#8b5cf6,#22d3ee);--ok:#34d399;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f3f4f9;--p:#fff;--p2:#eef0f7;--b:#d9dcea;--t:#161828;--m:#5d6382;color-scheme:light}}
+:root[data-theme="dark"]{color-scheme:dark}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:radial-gradient(900px 500px at 80% -10%,#8b5cf633,transparent),var(--bg);color:var(--t);font:15px/1.5 Inter,system-ui,sans-serif;min-height:100vh}
+h1,h2,h3{margin:0 0 .4em;letter-spacing:-.01em}h1{font-size:1.6rem}h2{font-size:1.2rem}h3{font-size:1rem}
+.app{display:flex;min-height:100vh}
+nav{width:220px;padding:20px 14px;border-right:1px solid var(--b);position:sticky;top:0;height:100vh;background:#0000;flex-shrink:0}
+.logo{font-weight:800;font-size:1.15rem;margin:0 8px 22px;display:flex;gap:8px;align-items:center}
+.logo i{width:28px;height:28px;border-radius:8px;background:var(--g);display:grid;place-items:center;font-style:normal;color:#fff;font-size:14px}
+nav button{display:flex;gap:10px;width:100%;text-align:left;background:none;border:0;color:var(--m);padding:10px 12px;border-radius:10px;font:inherit;cursor:pointer;margin-bottom:2px}
+nav button.on,nav button:hover{background:var(--p2);color:var(--t)}
+main{flex:1;min-width:0;padding:24px;max-width:1100px;margin:0 auto;width:100%}
+.card{background:var(--p);border:1px solid var(--b);border-radius:16px;padding:16px;margin-bottom:14px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(280px,1fr))}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:14px}
+.stat{background:var(--p);border:1px solid var(--b);border-radius:14px;padding:14px}.stat b{font-size:1.6rem;display:block;background:var(--g);-webkit-background-clip:text;background-clip:text;color:transparent}.stat span{color:var(--m);font-size:.8rem}
+label{display:block;font-size:.75rem;color:var(--m);margin:10px 0 4px;text-transform:uppercase;letter-spacing:.05em}
+input,textarea,select{width:100%;background:var(--p2);color:var(--t);border:1px solid var(--b);border-radius:10px;padding:9px 11px;font:inherit}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--a);border-color:transparent}
+textarea{resize:vertical;min-height:72px}
+.btn{background:var(--p2);color:var(--t);border:1px solid var(--b);border-radius:10px;padding:8px 14px;font:inherit;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.btn:hover{border-color:var(--a)}.btn.pri{background:var(--g);border:0;color:#fff;font-weight:600}.btn.sm{padding:5px 10px;font-size:.85rem}.btn.dng:hover{border-color:#f87171;color:#f87171}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.sp{justify-content:space-between}
+.chip{padding:4px 11px;border-radius:99px;background:var(--p2);border:1px solid var(--b);font-size:.8rem;cursor:pointer;color:var(--m)}.chip.on{background:#8b5cf633;border-color:var(--a);color:var(--t)}
+.thumb{aspect-ratio:16/9;border-radius:12px;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:10px;font-weight:700;border:1px solid var(--b)}
+.thumb::before{content:"";position:absolute;inset:0;background:linear-gradient(to top,#000a,transparent 60%)}.thumb span{position:relative;color:#fff;font-size:.85rem}
+.thumb img,.thumb video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.strip{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px}.strip .thumb{min-width:160px}
+.tabs{display:flex;gap:4px;margin:10px 0 8px;overflow-x:auto}.tabs button{background:none;border:0;color:var(--m);padding:6px 12px;border-radius:8px;cursor:pointer;font:inherit}.tabs button.on{background:var(--p2);color:var(--t)}
+pre{white-space:pre-wrap;word-break:break-word;background:var(--p2);border:1px solid var(--b);border-radius:10px;padding:12px;margin:0 0 10px;font:13px/1.55 ui-monospace,Menlo,monospace}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+.avatar{width:44px;height:44px;border-radius:50%;background:var(--g);display:grid;place-items:center;font-weight:800;color:#fff}
+.muted{color:var(--m);font-size:.85rem}.tag{font-size:.7rem;padding:2px 8px;border-radius:99px;background:#22d3ee22;color:var(--a2)}
+.sc-tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;padding-bottom:4px}
+#toast{position:fixed;left:50%;bottom:calc(86px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--p);border:1px solid var(--a);padding:10px 16px;border-radius:12px;opacity:0;pointer-events:none;transition:.25s;z-index:9;max-width:90vw;text-align:center}#toast.on{opacity:1}
+@media(max-width:859px){.app{display:block}nav{position:fixed;bottom:0;left:0;right:0;top:auto;width:auto;height:auto;display:flex;border:0;border-top:1px solid var(--b);background:var(--p);z-index:5;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));justify-content:space-around}
+.logo{display:none}nav button{flex-direction:column;align-items:center;gap:0;font-size:.65rem;padding:6px 4px;text-align:center;width:auto}nav button b{font-size:1.1rem}
+main{padding:16px 14px calc(90px + env(safe-area-inset-bottom,0px))}.two{grid-template-columns:1fr}h1{font-size:1.35rem}}
+</style></head><body>
+<div class="app"><nav id="nav"></nav><main id="main"></main></div><div id="toast"></div>
+<script>
+const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const uid=()=>Math.random().toString(36).slice(2,9);
+const toast=(m,ms=2600,err)=>{const t=$('#toast');t.textContent=m;t.classList.add('on');t.style.borderColor=err?'#f87171':'';clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('on'),ms)};
+const NAV=[['dash','◈','Dashboard'],['story','✎','Story'],['chars','☺','Characters'],['scenes','▤','Scenes'],['prod','▶','Production'],['hist','⏱','History']];
+const GR=['#8b5cf6,#0e7490','#ec4899,#4c1d95','#f59e0b,#7c2d12','#22d3ee,#1e3a8a','#34d399,#134e4a','#f43f5e,#3b0764'];
+const CAM=['wide establishing shot, slow push-in','medium shot, shallow depth of field','close-up, gentle handheld','low-angle tracking shot','over-the-shoulder, rack focus','aerial drone pull-back'];
+
+/* ---------- sample data ---------- */
+const SAMPLE_EN=`Aarav lived in an old lane of Jaipur where his grandfather Dadaji made paper lanterns. One rainy evening, the power went out across the city. Aarav ran to the workshop and found Dadaji lighting a lantern with trembling hands. "Every light starts with one small flame," Dadaji smiled.
+Aarav and his sister Meera carried a hundred lanterns to the rooftop. Meera laughed as the first lantern floated into the dark sky. Slowly, the whole neighbourhood joined them, and the sky glowed gold. Dadaji watched from the doorway with tears of joy. The lantern festival of Jaipur was born that night.`;
+const SAMPLE_HI=`आरव जयपुर की एक पुरानी गली में अपने दादाजी के साथ रहता था। दादाजी कागज़ की लालटेन बनाते थे। एक बरसाती शाम को पूरे शहर की बिजली चली गई। आरव दौड़कर कारखाने पहुँचा और दादाजी को दीया जलाते देखा।
+दादाजी मुस्कुराए और बोले, हर रोशनी एक छोटी लौ से शुरू होती है। मीरा और आरव ने छत पर सौ लालटेन उड़ाईं। पूरा मोहल्ला खुश होकर साथ आया और आसमान सुनहरा हो गया।`;
+const ch=(name,age,gender,face,hair,clothes,body,personality,features)=>({id:uid(),name,age,gender,face,hair,clothes,body,personality,features});
+function sample(){const X=(a,o)=>Object.assign(ch(...a),o),mk=o=>({id:uid(),duration:6,chars:[],ov:{},...o});
+const p={id:uid(),title:'The Lantern Maker of Jaipur',lang:'English',style:'cinematic, warm film grain, anamorphic lens, Pixar-quality 3D realism',story:SAMPLE_EN,created:Date.now(),
+characters:[X(['Aarav','10','male','round face with a small scar on the left eyebrow','short messy jet-black hair','mustard cotton kurta and faded blue denim shorts','small and wiry','curious, brave, kind','red thread bracelet on right wrist and a tiny scar on the left eyebrow'],{skin:'warm wheatish brown',eyes:'large curious dark-brown eyes',acc:'scuffed white canvas shoes, red thread bracelet'}),
+X(['Dadaji','72','male','deeply wrinkled warm face with a thick white handlebar moustache','bald crown with white hair at the sides','cream kurta, white dhoti and an orange Rajasthani turban','lean and slightly stooped','wise, gentle, patient','round gold-rimmed glasses and a brass lantern always in hand'],{skin:'deep tanned brown, weathered',eyes:'soft hazy brown eyes behind round glasses',acc:'tan leather jootis, silver ring on left hand'}),
+X(['Meera','14','female','oval face with dimples','long black braid tied with a yellow ribbon','teal salwar suit with a pink dupatta','slim and tall for her age','cheerful, protective, playful','yellow hair ribbon, silver anklets and a small nose stud'],{skin:'light wheatish',eyes:'bright almond-shaped dark eyes',acc:'silver anklets, glass bangles, brown leather sandals'})],
+scenes:[mk({title:'Blackout in the Old City',location:"narrow lane in Jaipur's walled pink city",time:'rainy dusk',env:'wet cobblestones reflecting amber shop lights, dripping marigold garlands, sandstone havelis, distant temple bells',actions:'Aarav sprints through puddles hugging his school bag as the streetlights flicker and die one by one',emotions:'Aarav: anxious, wide-eyed, urgent',shot:'wide establishing shot',move:'slow crane-down into a tracking shot behind Aarav',light:'cold blue dusk, warm amber window glow, rim light on rain',text:'That rainy evening, the old lanes of Jaipur fell into darkness. Aarav ran home, hoping someone still had a light.',sfx:'heavy monsoon rain, distant thunder, transformer buzz fading to silence; low cello drone',chars:['Aarav'],src:'One rainy evening, the power went out across the city.'}),
+mk({title:'The First Flame',location:"Dadaji's cluttered lantern workshop",time:'night, power cut',env:'shelves of paper lanterns, bamboo frames, glue pots, rain drumming on a tin roof',actions:'Dadaji lights a paper lantern with trembling hands while Aarav watches, breathless, from the doorway',emotions:'Dadaji: calm, tender; Aarav: awestruck, hopeful',shot:'medium two-shot, shallow depth of field',move:'slow push-in toward the glowing flame',light:'single warm flame as key light, deep soft shadows',text:'"Every light starts with one small flame," Dadaji smiled.',sfx:'match strike, soft crackle, rain on tin roof; gentle solo piano',chars:['Aarav','Dadaji'],src:'Aarav ran to the workshop and found Dadaji lighting a lantern with trembling hands.'}),
+mk({title:'A Hundred Lanterns Rise',location:'rooftop above the old city',time:'night, clearing sky',env:'terracotta rooftops, neighbours on balconies, lanterns drifting upward into an indigo sky',actions:'Aarav and Meera release a hundred lanterns; neighbours join; Dadaji watches from the doorway, tears in his eyes',emotions:'Meera: laughing, joyful; Aarav: proud; Dadaji: overwhelmed with happiness',shot:'aerial wide shot',move:'drone pulls back and rises above the glowing skyline',light:'golden lantern glow against deep indigo, warm bokeh',text:'Slowly the whole neighbourhood joined them, and the sky glowed gold. The lantern festival of Jaipur was born that night.',sfx:'crowd cheers, soft whoosh of lanterns; swelling strings with sitar and tabla',duration:8,chars:['Aarav','Meera','Dadaji'],src:'Aarav and his sister Meera carried a hundred lanterns to the rooftop...'})]};return p}
+
+/* ---------- analysis (local heuristic; swap for an LLM call later) ---------- */
+const STOP=new Set('The And But One When Then They She His Her Our That This There Every Slowly After Before While With From Into Over Under What Who Why How Not Yes Its Also Just Some Many Each'.split(' '));
+function findNames(txt){const s=txt.split(/(?<=[.!?।])\s+/),c={};
+s.forEach(x=>{(x.match(/\b[A-Z][a-z]{2,}\b/g)||[]).forEach((w,i)=>{if(STOP.has(w))return;const first=x.trim().startsWith(w);c[w]=(c[w]||0)+(first?.5:1)})
+const h=x.trim().match(/^([\u0900-\u097F]{2,})\s(?:ने|को|से|के|का|की)?/);if(h&&/^[\u0900-\u097F]/.test(x.trim())&&!['एक','पूरे','पूरा','हर','दादाजी'].includes(h[1]))c[h[1]]=(c[h[1]]||0)+1;
+(x.match(/(?:और|तथा)\s([\u0900-\u097F]{2,})/g)||[]).forEach(m=>{const w=m.split(/\s/)[1];if(w.length>2)c[w]=(c[w]||0)+1})});
+return Object.entries(c).filter(e=>e[1]>=1).sort((a,b)=>b[1]-a[1]).slice(0,5).map(e=>e[0])}
+function guess(map,txt,d){for(const[k,v]of map)if(new RegExp(k,'i').test(txt))return v;return d}
+const LOC=[['forest|जंगल','dense misty forest'],['village|गाँव','Indian village lane'],['market|बाज़ार','busy bazaar'],['river|नदी','riverbank'],['temple|मंदिर','ancient temple courtyard'],['palace|महल','royal palace hall'],['rooftop|छत','rooftop overlooking the old city'],['workshop|कारखाने|factory','cluttered artisan workshop'],['lane|gali|गली','narrow old city lane'],['home|house|घर','warm family home'],['school|स्कूल','school courtyard'],['sea|ocean|समुद्र','seashore']];
+const TIME=[['night|रात|dark','night'],['rain|बरसात','rainy dusk'],['evening|शाम|sunset','golden-hour evening'],['morning|सुबह','soft morning light']];
+const MOOD=[['fear|danger|डर|dark','tense and suspenseful'],['laugh|joy|happy|खुश|मुस्कु|smile','joyful and uplifting'],['cry|tears|sad|दुख|रो','emotional and melancholic'],['fight|run|ran|दौड़','urgent and energetic']];
+function analyze(story,names){const s=story.replace(/\n+/g,' ').split(/(?<=[.!?।])\s+/).map(x=>x.trim()).filter(Boolean);const n=s.length>12?3:2,out=[];let prev=[];
+for(let i=0;i<s.length;i+=n){const t=s.slice(i,i+n).join(' ');let cs=names.filter(x=>t.includes(x));if(!cs.length)cs=prev;prev=cs;
+out.push({id:uid(),title:t.split(/\s+/).slice(0,5).join(' ').replace(/[.,!?।"]+$/,''),location:guess(LOC,t,'cinematic setting matching the story'),time:guess(TIME,t,'golden hour'),mood:guess(MOOD,t,'emotional and cinematic'),text:t,action:t,camera:CAM[out.length%CAM.length],duration:5+Math.min(5,Math.round(t.length/90)),chars:cs})}return out}
+function newCharFromName(n){let h=0;for(const c of n)h=(h*31+c.charCodeAt(0))>>>0;const pick=a=>a[h%a.length];
+return ch(n,pick(['10','28','35','45','16']),pick(['male','female']),pick(['sharp expressive eyes, defined cheekbones','soft round face, warm brown eyes','angular face, thoughtful dark eyes']),pick(['short black hair','long black hair in a braid','neatly combed wavy hair']),pick(['traditional kurta in earthy tones','simple cotton shirt and trousers','colourful salwar suit']),pick(['average build','slim build','sturdy build']),pick(['kind and determined','curious and brave','calm and wise']),pick(['small red thread on wrist','distinct mole on left cheek','silver pendant']))}
+
+/* ---------- schema migration ---------- */
+function mig(p){p.characters.forEach(c=>{for(const k of['skin','eyes','acc'])c[k]=c[k]??'';c.aliases??=[]});p.scenes.forEach(s=>{s.env??='';s.actions??=s.action||'';s.emotions??=s.mood||'';s.shot??=s.camera||'';s.move??='';s.light??='';s.sfx??='';s.ov??={};s.src??=s.text});return p}
+function addProj(o){const p=mig({id:uid(),created:Date.now(),...o});S.projects.unshift(p);S.cur=p.id;S.view='chars';S.sel=0;r();return p}
+
+/* ---------- SERVICE LAYER: swap providers here, UI never changes ----------
+   Keys NEVER live in the frontend. Each service calls YOUR backend: POST {API_BASE}/api/<service> -> {url}.
+   Or set Services.<name>.impl = async(req)=>({url}) to plug an SDK/adapter directly. */
+const API_BASE=(()=>{try{return(new URLSearchParams(location.search).get('api')||window.S2V_API_BASE||'').replace(/\/$/,'')}catch(e){return ''}})();
+const proxy=k=>async req=>{const ac=new AbortController(),to=setTimeout(()=>ac.abort(),180000);try{const x=await fetch(`${API_BASE}/api/${k}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(req),signal:ac.signal});let j={};try{j=await x.json()}catch(e){}if(!x.ok)throw{message:j.error||`${k} service returned HTTP ${x.status}`,category:j.category};return j}catch(e){if(e&&e.name==='AbortError')throw{message:`${k} request timed out`};if(e instanceof TypeError)throw{message:`Cannot reach the ${k} backend at ${API_BASE}. Is it running, and does it allow this origin (CORS)?`};throw e}finally{clearTimeout(to)}};
+const Services={
+ llm:{label:'Story analysis (LLM)',options:'Claude (built-in now) → Anthropic API / OpenAI / Gemini',env:'ANTHROPIC_API_KEY',ep:'llm() in the AI layer / POST /api/llm',impl:'builtin'},
+ image:{label:'Image generation',options:'OpenAI gpt-image-2.5 (recommended), Flux Kontext, Gemini image',env:'OPENAI_API_KEY',ep:'POST /api/image',impl:API_BASE?proxy('image'):null},
+ video:{label:'Image-to-video',options:'Runway, Kling, Luma, Google Veo',env:'VIDEO_API_KEY',ep:'POST /api/video',impl:API_BASE?proxy('video'):null},
+ tts:{label:'Text-to-speech (voice-over)',options:'ElevenLabs, Azure Speech, Google TTS (Hindi + English)',env:'TTS_API_KEY',ep:'POST /api/tts',impl:API_BASE?proxy('tts'):null},
+ music:{label:'Music / SFX',options:'Suno, ElevenLabs Music, Stable Audio',env:'MUSIC_API_KEY',ep:'POST /api/music',impl:API_BASE?proxy('music'):null}};
+Services.call=(k,req)=>{const s=Services[k];if(!s.impl)throw{code:'not_configured',message:`${s.label} API is not connected yet. Add ${s.env} to your backend and set API_BASE (or Services.${k}.impl). See "Service connections" on the Production page.`};return s.impl(req)};
+
+/* ---------- AI layer (real LLM) ---------- */
+const SCHEMA=`{"title":"","language":"Hindi|English","characters":[{"name":"","age":"","gender":"","face":"","skin":"","hair":"","eyes":"","body":"","clothes":"","accessories":"shoes + accessories","personality":"","identity":"2-3 unmistakable permanent visual traits"}],"scenes":[{"title":"","location":"","time":"","environment":"","actions":"what each character does","emotions":"per-character emotions","shot":"","movement":"","lighting":"","voiceover":"","sfx":"background music + sound effects","characters":["exact names present"],"duration":6,"source":"story excerpt covered"}]}`;
+const RULES=`You are a film pre-production AI. The story may be Hindi or English. Where the story is silent, invent concrete, specific visual details (never contradicting the story). Voice-over must be narration-ready and written in the story's own language. Every other field is in English.`;
+const CH_ONE={...JSON.parse(SCHEMA).characters[0],aliases:['other names, titles or nicknames used for this character in the story']},SC_ONE=JSON.parse(SCHEMA).scenes[0];
+async function llm(prompt){const sm=await window.claude?.use?.('sample');if(!sm)throw{code:'unavailable',message:'The AI service is not available (permission denied or unsupported view).'};
+for(let a=0;;a++){try{return await sm.json(prompt,{cache:false})}catch(e){if(e&&e.code==='invalid_json'&&a<1)continue;throw e}}}
+/* Pass 1: read the WHOLE story, build the Character Bible */
+const aiCharacters=(story,style)=>llm(`${RULES}\n\nTask: read the complete story and identify ALL characters (named, plus recurring unnamed ones like "the shopkeeper"). Give each ONE canonical name and list every alias/title used for them. Create a detailed, specific, permanent visual profile per character (visual style: ${style}).\nReturn ONLY JSON: {"title":"","language":"Hindi|English","characters":[${JSON.stringify(CH_ONE)}]}\n\nSTORY:\n${story}`);
+const bibleText=cs=>cs.map(c=>`- ${c.name}${c.aliases.length?' (also: '+c.aliases.join(', ')+')':''}: ${c.age}y ${c.gender}`).join('\n');
+const SCENE_RULES=`Divide the story into logical CINEMATIC scenes (new scene when location, time or dramatic beat changes), not paragraphs; 3-12 scenes, covering the whole story in order. CHARACTER CONSISTENCY: refer to characters ONLY by their exact canonical name from the Character Bible below, and NEVER describe their face, hair, clothes or age in scene fields; appearance is injected automatically from the Bible. In "characters" list every Bible character visible or speaking in the scene.`;
+const aiScenes=(story,style,cs)=>llm(`${RULES}\n${SCENE_RULES}\n\nVisual style: ${style}\nCHARACTER BIBLE (canonical names):\n${bibleText(cs)}\n\nReturn ONLY JSON: {"scenes":[${JSON.stringify(SC_ONE)}]}\n\nSTORY:\n${story}`);
+const aiScene=async(p,i)=>{const sc=p.scenes[i];return llm(`${RULES}\n${SCENE_RULES}\n\nTask: rewrite ONE scene with a fresh cinematic treatment (different shot, movement and lighting than before).\nCHARACTER BIBLE (canonical names):\n${bibleText(p.characters)}\n\nReturn ONLY one JSON object: ${JSON.stringify(SC_ONE)}\n\nFull story:\n${p.story}\nScene #${i+1}: ${sc.title}\nExcerpt: ${sc.src||sc.text}\nPrevious: ${p.scenes[i-1]?.title||'none'}; Next: ${p.scenes[i+1]?.title||'none'}\nCurrent: shot=${sc.shot}; movement=${sc.move}; lighting=${sc.light}`)};
+const nc=c=>({id:uid(),name:String(c.name||'Character').trim(),aliases:(Array.isArray(c.aliases)?c.aliases:[]).map(a=>String(a).trim()).filter(Boolean),age:String(c.age??''),gender:c.gender||'',face:c.face||'',skin:c.skin||'',hair:c.hair||'',eyes:c.eyes||'',body:c.body||'',clothes:c.clothes||'',acc:c.accessories||'',personality:c.personality||'',features:c.identity||''});
+/* unique canonical names so [[Name]] tokens always resolve to exactly one profile */
+function bible(list){const seen=new Set(),out=[];for(const c of list.map(nc)){let n=c.name,k=2;while(seen.has(n.toLowerCase()))n=`${c.name} ${k++}`;c.name=n;seen.add(n.toLowerCase());out.push(c)}return out}
+const hit=(t,w)=>w&&String(t).toLowerCase().includes(w.toLowerCase());
+function resolve(n,cs){n=String(n||'').trim();return cs.find(c=>c.name.toLowerCase()===n.toLowerCase())||cs.find(c=>c.aliases.some(a=>a.toLowerCase()===n.toLowerCase()))||cs.find(c=>n&&(hit(c.name,n)||hit(n,c.name)))||null}
+/* scene -> Bible references: names the AI listed (alias-resolved) + any Bible character found in the scene text */
+const ns=(s,cs)=>{const txt=[s.source,s.voiceover,s.actions,s.emotions].join(' '),set=new Set((s.characters||[]).map(n=>resolve(n,cs)).filter(Boolean));cs.forEach(c=>{if([c.name,...c.aliases].some(w=>hit(txt,w)))set.add(c)});
+return{id:uid(),title:s.title||'Scene',location:s.location||'',time:s.time||'',env:s.environment||'',actions:s.actions||'',emotions:s.emotions||'',shot:s.shot||'',move:s.movement||'',light:s.lighting||'',text:s.voiceover||'',sfx:s.sfx||'',duration:+s.duration||6,chars:cs.filter(c=>set.has(c)).map(c=>c.name),src:s.source||'',ov:{}}};
+
+/* ---------- prompt engine: prompts hold [[Name]] tokens, expanded live from the Character Bible ---------- */
+const cd=c=>`${c.name} (${[c.age&&c.age+'-year-old '+c.gender,c.face&&'face: '+c.face,c.skin&&'skin: '+c.skin,c.hair&&'hair: '+c.hair,c.eyes&&'eyes: '+c.eyes,c.body&&c.body+' build',c.clothes&&'wearing '+c.clothes,c.acc&&'shoes/accessories: '+c.acc,c.features&&'permanent identity: '+c.features,c.personality&&'personality: '+c.personality].filter(Boolean).join('; ')})`;
+const exp=(t,p)=>String(t).replace(/\[\[(.+?)\]\]/g,(m,n)=>{const c=p.characters.find(x=>x.name===n);return c?cd(c):n});
+function T(sc,p){const cs=sc.chars.map(n=>`[[${n}]]`).join(' | ')||'no named characters',nm=sc.chars.join(', ')||'subjects';
+return{image:`${p.style}. ${sc.shot}. ${sc.location}, ${sc.time}. Environment: ${sc.env}. Action: ${sc.actions}. Emotions: ${sc.emotions}.\nCharacters (keep identical across all scenes): ${cs}\nLighting: ${sc.light}. 16:9, ultra-detailed, consistent character design.`,
+video:`Animate the reference image. ${sc.actions}. Emotions: ${sc.emotions}.\nCamera: ${sc.shot}, ${sc.move}. Lighting: ${sc.light}. Duration: ${sc.duration}s, 24fps, smooth natural motion.\nCharacter lock: ${cs}\nKeep ${nm} visually identical to the reference; no morphing, no extra people.`,
+voice:`Language: ${p.lang}. Voice: warm cinematic storyteller, ${sc.emotions||'emotional'} tone, medium pace, natural pauses. Length ≈ ${sc.duration}s.\nScript: "${sc.text}"`,
+music:`Background music + SFX for "${sc.location}", ${sc.time}: ${sc.sfx||'cinematic score'}. Mood: ${sc.emotions}. ${sc.duration}s, slow build, no vocals, loop-friendly.`}}
+function P(sc,p){const t=T(sc,p),o={};for(const k in t)o[k]=exp(sc.ov&&sc.ov[k]!=null?sc.ov[k]:t[k],p);return o}
+const KINDS=[['image','Image'],['video','Video'],['voice','Voice-over'],['music','Music / SFX']];
+
+/* ---------- state ---------- */
+let S={projects:[],cur:null,view:'dash',sel:0,tab:{}};
+let fresh=true;try{const r=localStorage.getItem('s2v2');if(r){S=Object.assign(S,JSON.parse(r));fresh=false}}catch(e){}
+if(fresh){let old=[];try{old=(JSON.parse(localStorage.getItem('s2v')||'{}').projects||[]).filter(p=>p.title!=='The Lantern Maker of Jaipur')}catch(e){}const p=sample();S.projects=[p,...old];S.cur=p.id}
+S.projects.forEach(mig);if(!S.projects.length){const p=sample();S.projects=[p];S.cur=p.id}
+const save=()=>{try{localStorage.setItem('s2v2',JSON.stringify(S))}catch(e){}};
+const cur=()=>S.projects.find(p=>p.id===S.cur)||S.projects[0];
+const grad=i=>`linear-gradient(135deg,${GR[i%GR.length].split(',').join(',')})`;
+const thumb=(sc,i)=>`<div class="thumb" style="background:${grad(i)}">${sc.imageUrl?`<img src="${esc(sc.imageUrl)}">`:''}${sc.videoUrl?`<video src="${esc(sc.videoUrl)}" controls></video>`:''}<span>${i+1}. ${esc(sc.title)}</span></div>`;
+
+/* ---------- helpers ---------- */
+async function copy(t){try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(_){}a.remove()}toast('Prompt copied')}
+async function dl(n,t){try{const d=await window.claude?.use?.('downloads');if(d){await d.save({filename:n,data:t});return toast('✓ Saved '+n)}}catch(e){if(e&&e.code==='declined')return toast('Download cancelled')}
+try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([t],{type:'text/plain'}));a.download=n;a.click();toast('Downloading '+n)}catch(e){toast('Download blocked here — use Copy Prompt instead',4000,1)}}
+const GK={image:['image','imageUrl','Image'],video:['video','videoUrl','Video'],tts:['voice','voiceUrl','Voice-over audio'],music:['music','musicUrl','Music']};
+/* Identity lock: each character gets ONE reference portrait generated from the Bible; every scene image is conditioned on those portraits.
+   A portrait is regenerated only when that character's Bible text (or the style) changes. */
+async function ensureRefs(p,sc,btn){p.seed??=Math.floor(Math.random()*2**31);const out=[];
+for(const n of sc.chars){const c=p.characters.find(x=>x.name===n);if(!c)continue;const sig=cd(c)+'|'+p.style;
+if(!c.refUrl||c.refSig!==sig){if(btn)btn.textContent=`⏳ Reference: ${c.name}…`;
+try{const r=await Services.call('image',{type:'character_reference',prompt:`Character reference sheet, ${p.style}. Single character, front-facing, full body, neutral standing pose, plain light-grey studio background, soft even lighting, no text.\n${cd(c)}`,size:'1024x1024',seed:p.seed,characters:[c],references:[]});if(!r||!r.url)throw{message:'no image URL returned'};c.refUrl=r.url;c.refSig=sig;save()}
+catch(e){if(e.code==='not_configured')throw e;throw{message:`Character reference for ${c.name} failed: ${e.message||e}`}}}
+out.push({name:c.name,url:c.refUrl})}
+if(btn)btn.textContent='⏳ Generating…';return out}
+async function generate(kind,i,btn){const p=cur(),sc=p.scenes[i],[pk,uk,lb]=GK[kind],old=btn&&btn.textContent;if(btn){btn.disabled=true;btn.textContent='⏳ Generating…'}
+try{if(kind==='video'&&Services.video.impl&&!sc.imageUrl)throw{message:'Generate the scene image first — image-to-video needs a reference image.'};
+const refs=kind==='image'?await ensureRefs(p,sc,btn):[];let prompt=P(sc,p)[pk];if(refs.length)prompt+=`\nReference images are attached in this order: ${refs.map(x=>x.name).join(', ')}. Each named character MUST match their reference image exactly (face, age, hairstyle, clothing, accessories); do not redesign any character.`;
+const res=await Services.call(kind,{prompt,type:'scene',size:'1536x1024',seed:p.seed,scene:{title:sc.title,duration:sc.duration,index:i},characters:sc.chars.map(n=>p.characters.find(c=>c.name===n)).filter(Boolean),references:refs,referenceImage:sc.imageUrl||null});
+if(!res||!res.url)throw{message:'The service returned no media URL.'};sc[uk]=res.url;save();r();toast(`✓ ${lb} ready for scene ${i+1}`)}
+catch(e){if(e.category==='reference_missing'&&!generate.retry){sc.chars.forEach(n=>{const c=p.characters.find(x=>x.name===n);if(c)c.refUrl=''});generate.retry=1;try{return await generate(kind,i,btn)}finally{generate.retry=0}}const nc_=e.code==='not_configured';toast((nc_?'⚠ ':'✗ ')+(e.message||'Generation failed'),nc_?8000:5000,1)}
+finally{if(btn&&btn.isConnected){btn.disabled=false;btn.textContent=old}}}
+const allText=p=>`# ${p.title}\n\n## Character Bible\n`+p.characters.map(c=>`- ${cd(c)}`).join('\n')+'\n\n'+p.scenes.map((sc,i)=>{const x=P(sc,p);return `## Scene ${i+1}: ${sc.title}\nIMAGE:\n${x.image}\n\nVIDEO:\n${x.video}\n\nVOICE-OVER:\n${x.voice}\n\nMUSIC/SFX:\n${x.music}\n`}).join('\n')
+
+/* ---------- views ---------- */
+function field(t,i,k,l,v,ta){return `<label>${l}</label>${ta?`<textarea data-t="${t}" data-i="${i}" data-k="${k}">${esc(v)}</textarea>`:`<input data-t="${t}" data-i="${i}" data-k="${k}" value="${esc(v)}">`}`}
+function promptBlock(i){const p=cur(),sc=p.scenes[i],k=S.tab[sc.id]||'image',x=P(sc,p),tp=T(sc,p)[k],cu=sc.ov&&sc.ov[k]!=null;
+return `<div class="tabs">${KINDS.map(([a,b])=>`<button class="${k===a?'on':''}" data-a="tab" data-id="${sc.id}" data-k="${a}" data-i="${i}">${b}</button>`).join('')}</div>
+<pre data-pre="${i}">${esc(x[k])}</pre><div class="row"><button class="btn sm" data-a="copy" data-i="${i}">⧉ Copy Prompt</button><button class="btn sm" data-a="dl" data-i="${i}">⇩ Download</button></div>
+<details style="margin-top:8px"><summary class="muted" style="cursor:pointer">Edit prompt${cu?' (customised)':''}</summary><textarea style="min-height:130px;margin-top:6px" data-t="o" data-i="${i}" data-k="${k}">${esc(cu?sc.ov[k]:tp)}</textarea><div class="muted">[[Name]] inserts that character's live Character Bible text, so Bible edits flow into this prompt.</div><button class="btn sm" style="margin-top:6px" data-a="resetov" data-i="${i}" data-k="${k}">Reset to auto</button></details>`}
+const V={
+dash(p){const dur=p.scenes.reduce((a,s)=>a+ +s.duration,0);return `<h1>Welcome back 🎬</h1><p class="muted">Turn any story into a full AI video production plan.</p>
+<div class="stats"><div class="stat"><b>${S.projects.length}</b><span>Projects</span></div><div class="stat"><b>${p.scenes.length}</b><span>Scenes</span></div><div class="stat"><b>${p.characters.length}</b><span>Characters</span></div><div class="stat"><b>${dur}s</b><span>Est. runtime</span></div></div>
+<div class="card"><div class="row sp"><div><span class="tag">ACTIVE PROJECT</span><h2 style="margin-top:6px">${esc(p.title)}</h2></div><div class="row"><button class="btn" data-a="go" data-v="story">+ New Story</button><button class="btn pri" data-a="go" data-v="prod">Open Production ▶</button></div></div>
+<div class="strip" style="margin-top:12px">${p.scenes.map(thumb).join('')}</div></div>
+<div class="grid"><div class="card"><h3>☺ Character Bible</h3><div class="row">${p.characters.map(c=>`<div class="avatar" title="${esc(c.name)}">${esc(c.name[0])}</div>`).join('')}</div><p class="muted">Consistent traits are auto-injected in every prompt.</p><button class="btn sm" data-a="go" data-v="chars">Edit characters</button></div>
+<div class="card"><h3>▤ Scene Editor</h3><p class="muted">Tweak location, mood, camera, narration — prompts update live.</p><button class="btn sm" data-a="go" data-v="scenes">Edit scenes</button></div>
+<div class="card"><h3>⇩ Export</h3><p class="muted">Download the full prompt pack for all scenes.</p><button class="btn sm" data-a="dlall">Download all prompts</button></div></div>`},
+story(p){return `<h1>Story Input</h1><p class="muted">Write in Hindi or English. The analyzer splits scenes and builds your Character Bible.</p><div class="card">
+<div class="two"><div><label>Project title</label><input id="st-title" placeholder="My story" value=""></div><div><label>Visual style</label><input id="st-style" value="cinematic, warm film grain, anamorphic lens, Pixar-quality 3D realism"></div></div>
+<label>Story (Hindi / English)</label><textarea id="st-text" style="min-height:220px" placeholder="Once upon a time… / एक समय की बात है…"></textarea>
+<div class="row" style="margin-top:12px"><button class="btn pri" data-a="analyze">✦ Analyze Story</button><button class="btn" data-a="fill" data-k="en">English sample</button><button class="btn" data-a="fill" data-k="hi">हिंदी नमूना</button></div></div>
+<div id="st-err"></div><p class="muted">Analysis uses real AI (Claude). If AI is unavailable you can fall back to the basic offline analyzer.</p>`},
+chars(p){return `<div class="row sp"><h1>Character Bible</h1><button class="btn" data-a="addchar">+ Add character</button></div><p class="muted">Edits update every scene prompt that uses the character, instantly.</p><div class="grid">`+p.characters.map((c,i)=>`<div class="card"><div class="row sp"><div class="row"><div class="avatar">${esc(c.name[0]||'?')}</div><div><h3 style="margin:0">${esc(c.name)}</h3><span class="tag">in ${p.scenes.filter(s=>s.chars.includes(c.name)).length} scenes</span></div></div><button class="btn sm dng" data-a="delchar" data-i="${i}">Delete</button></div>
+<div class="two">${field('c',i,'name','Name',c.name)}${field('c',i,'age','Age',c.age)}${field('c',i,'gender','Gender',c.gender)}${field('c',i,'skin','Skin tone',c.skin)}</div>${field('c',i,'face','Face',c.face,1)}${field('c',i,'hair','Hair',c.hair)}${field('c',i,'eyes','Eyes',c.eyes)}${field('c',i,'body','Body type',c.body)}${field('c',i,'clothes','Clothes',c.clothes)}${field('c',i,'acc','Shoes & accessories',c.acc)}${field('c',i,'personality','Personality',c.personality)}${field('c',i,'features','Permanent visual identity',c.features,1)}</div>`).join('')+'</div>'},
+scenes(p){const i=Math.min(S.sel,p.scenes.length-1),sc=p.scenes[i];if(!sc)return '<p>No scenes.</p>';
+return `<div class="row sp"><h1>Scene Editor</h1><button class="btn" data-a="addscene">+ Add scene</button></div><div class="sc-tabs">${p.scenes.map((s,j)=>`<span class="chip ${j===i?'on':''}" data-a="sel" data-i="${j}">${j+1}. ${esc(s.title.slice(0,18))}</span>`).join('')}</div>
+<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))"><div class="card"><div class="two">${field('s',i,'title','Scene title',sc.title)}${field('s',i,'duration','Duration (s)',sc.duration)}${field('s',i,'location','Location',sc.location)}${field('s',i,'time','Time of day',sc.time)}${field('s',i,'shot','Camera shot',sc.shot)}${field('s',i,'move','Camera movement',sc.move)}</div>
+${field('s',i,'env','Environment',sc.env,1)}${field('s',i,'actions','Character actions',sc.actions,1)}${field('s',i,'emotions','Character emotions',sc.emotions)}${field('s',i,'light','Lighting',sc.light)}${field('s',i,'text','Voice-over script',sc.text,1)}${field('s',i,'sfx','Background music / SFX',sc.sfx,1)}
+<label>Characters in scene</label><div class="row">${p.characters.map(c=>`<span class="chip ${sc.chars.includes(c.name)?'on':''}" data-a="tc" data-n="${esc(c.name)}">${esc(c.name)}</span>`).join('')}</div>
+<div class="row" style="margin-top:14px"><button class="btn sm pri" data-a="regen" data-i="${i}">↻ Regenerate Scene</button><button class="btn sm dng" data-a="delscene" data-i="${i}">Delete scene</button></div></div>
+<div class="card"><h3>Live prompts</h3>${thumb(sc,i)}${promptBlock(i)}</div></div>`},
+prod(p){return `<div class="row sp"><div><h1>Video Production</h1><p class="muted" style="margin:0">${p.scenes.length} scenes · scene-by-scene preview</p></div><button class="btn" data-a="dlall">⇩ Download all</button></div><br>
+<div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(340px,1fr))">${p.scenes.map((sc,i)=>`<div class="card">${thumb(sc,i)}<div class="row sp" style="margin-top:10px"><b>Scene ${i+1}</b><span class="tag">${sc.duration}s · ${esc(sc.time)}</span></div><div class="muted">${esc(sc.location)} · ${esc(sc.shot)} · ${sc.chars.map(esc).join(', ')}</div>${promptBlock(i)}
+${sc.voiceUrl?`<audio controls style="width:100%;margin-top:8px" src="${esc(sc.voiceUrl)}"></audio>`:''}${sc.musicUrl?`<audio controls style="width:100%;margin-top:8px" src="${esc(sc.musicUrl)}"></audio>`:''}
+<div class="row" style="margin-top:10px">${[['image','Image'],['video','Video'],['tts','Voice'],['music','Music']].map(([k,l])=>`<button class="btn sm pri" data-a="gen" data-k="${k}" data-i="${i}">✦ Generate ${l}</button>`).join('')}<button class="btn sm" data-a="regen" data-i="${i}">↻ Regenerate Scene</button></div></div>`).join('')}</div>
+<div class="card"><h3>🔌 Service connections</h3><p class="muted">Every service is a swappable adapter in <code>Services</code>. API keys stay on your backend; the app calls <code>${API_BASE||'API_BASE'}/api/&lt;service&gt;</code>.</p>${Object.values(Services).map(s=>`<div class="row sp" style="padding:8px 0;border-top:1px solid var(--b)"><div><b>${s.label}</b><div class="muted">${s.options}<br>Key: <code>${s.env}</code> · Connect: <code>${s.ep}</code></div></div><span class="chip ${s.impl?'on':''}">${s.impl?(s.impl==='builtin'?'Connected (built-in Claude)':'Connected'):'Not connected'}</span></div>`).join('')}</div>`},
+hist(){return `<div class="row sp"><h1>Project History</h1><button class="btn pri" data-a="go" data-v="story">+ New Story</button></div><div class="grid">`+S.projects.map(p=>`<div class="card"><div class="strip">${p.scenes.slice(0,3).map(thumb).join('')}</div><h3 style="margin-top:10px">${esc(p.title)}${p.id===S.cur?' <span class="tag">active</span>':''}</h3><p class="muted">${p.scenes.length} scenes · ${p.characters.length} characters · ${p.lang} · ${new Date(p.created).toLocaleDateString()}</p>
+<div class="row"><button class="btn sm pri" data-a="open" data-id="${p.id}">Open</button><button class="btn sm" data-a="dup" data-id="${p.id}">Duplicate</button><button class="btn sm dng" data-a="del" data-id="${p.id}">Delete</button></div></div>`).join('')+'</div>'}};
+
+function r(){const p=cur();$('#nav').innerHTML=`<div class="logo"><i>▶</i>Story2Video AI</div>`+NAV.map(([k,i,l])=>`<button class="${S.view===k?'on':''}" data-a="go" data-v="${k}"><b>${i}</b> ${l}</button>`).join('');
+$('#main').innerHTML=V[S.view](p);save()}
+r();
+
+/* ---------- events ---------- */
+document.addEventListener('click',async e=>{const el=e.target.closest('[data-a]');if(!el)return;const d=el.dataset,p=cur(),i=+d.i;
+switch(d.a){
+case'go':S.view=d.v;scrollTo(0,0);r();break;
+case'tab':S.tab[d.id]=d.k;r();break;
+case'sel':S.sel=i;r();break;
+case'copy':copy(P(p.scenes[i],p)[S.tab[p.scenes[i].id]||'image']);break;
+case'dl':{const k=S.tab[p.scenes[i].id]||'image';dl(`scene${i+1}-${k}-prompt.txt`,P(p.scenes[i],p)[k]);break}
+case'dlall':dl(p.title.replace(/\W+/g,'_')+'_prompts.txt',allText(p));break;
+case'gen':await generate(d.k,i,el);break;
+case'tc':{const sc=p.scenes[S.sel];sc.chars=sc.chars.includes(d.n)?sc.chars.filter(x=>x!==d.n):[...sc.chars,d.n];r();break}
+case'addchar':{let n='New Character',k=2;while(p.characters.some(c=>c.name===n))n='New Character '+k++;p.characters.push(newCharFromName(n))};r();break;
+case'delchar':p.characters.splice(i,1);r();break;
+case'addscene':p.scenes.push({id:uid(),title:'New scene',location:'location',time:'golden hour',mood:'cinematic',text:'Narration…',action:'Describe the action…',camera:CAM[0],duration:5,chars:[]});S.sel=p.scenes.length-1;r();break;
+case'delscene':p.scenes.splice(i,1);S.sel=0;r();break;
+case'fill':$('#st-text').value=d.k==='hi'?SAMPLE_HI:SAMPLE_EN;$('#st-title').value=d.k==='hi'?'जयपुर का लालटेन वाला':'The Lantern Maker of Jaipur';break;
+case'analyze':{const t=$('#st-text').value.trim();if(t.length<20)return toast('Please enter a longer story',2600,1);const style=$('#st-style').value,title=$('#st-title').value,old=el.textContent;el.disabled=true;el.textContent='⏳ 1/2 Building Character Bible…';$('#st-err').innerHTML='';
+try{const cj=await aiCharacters(t,style);if(!cj||!Array.isArray(cj.characters))throw{message:'The AI returned an unexpected character list.'};const chs=bible(cj.characters);
+el.textContent='⏳ 2/2 Breaking into scenes…';const sj=await aiScenes(t,style,chs);if(!sj||!Array.isArray(sj.scenes)||!sj.scenes.length)throw{message:'The AI returned no scenes.'};
+addProj({title:title||cj.title||'Untitled story',lang:cj.language==='Hindi'?'Hindi':'English',style,story:t,characters:chs,scenes:sj.scenes.map(x=>ns(x,chs))});toast(`✓ AI found ${chs.length} characters and ${sj.scenes.length} scenes — review the Character Bible`,5000)}
+catch(err){$('#st-err').innerHTML=`<div class="card" style="border-color:#f87171"><b>Analysis failed.</b> ${esc(err.message||err.code||'Unknown error')}<div class="row" style="margin-top:8px"><button class="btn sm" data-a="analyze">Retry</button><button class="btn sm" data-a="offline">Use offline analyzer</button></div></div>`}
+finally{el.disabled=false;el.textContent=old}break}
+case'offline':{const t=$('#st-text').value.trim();if(t.length<20)return;const names=findNames(t);addProj({title:$('#st-title').value||'Untitled story',lang:/[\u0900-\u097F]/.test(t)?'Hindi':'English',style:$('#st-style').value,story:t,characters:names.map(newCharFromName),scenes:analyze(t,names)});toast('Offline analyzer used — details are basic, edit freely');break}
+case'regen':{const sc=p.scenes[i],old=el.textContent;el.disabled=true;el.textContent='⏳ Regenerating…';
+try{let j=await aiScene(p,i);j=j&&j.scene?j.scene:j;if(!j||!j.title)throw{message:'The AI returned an unexpected result.'};const n=ns(j,p.characters);n.id=sc.id;p.scenes[i]=n;S.sel=i;r();toast(`✓ Scene ${i+1} regenerated`)}
+catch(err){toast('✗ '+(err.message||err.code||'Regeneration failed'),5000,1)}
+finally{if(el.isConnected){el.disabled=false;el.textContent=old}}break}
+case'resetov':delete p.scenes[i].ov[d.k];r();toast('Prompt reset to auto');break;
+case'open':S.cur=d.id;S.view='dash';S.sel=0;r();break;
+case'dup':{const o=S.projects.find(x=>x.id===d.id),c=JSON.parse(JSON.stringify(o));c.id=uid();c.title+=' (copy)';c.created=Date.now();S.projects.unshift(c);r();break}
+case'del':if(S.projects.length<2)return toast('Keep at least one project');S.projects=S.projects.filter(x=>x.id!==d.id);if(S.cur===d.id)S.cur=S.projects[0].id;r();break}});
+document.addEventListener('input',e=>{const el=e.target,d=el.dataset;if(!d.t)return;const p=cur();
+if(d.t==='o'){const sc=p.scenes[+d.i];sc.ov=sc.ov||{};sc.ov[d.k]=el.value}
+else{const o=d.t==='c'?p.characters[+d.i]:p.scenes[+d.i];if(d.t==='c'&&d.k==='name'){const old=o.name;p.scenes.forEach(s=>{s.chars=s.chars.map(n=>n===old?el.value:n);for(const k in s.ov||{})s.ov[k]=s.ov[k].split(`[[${old}]]`).join(`[[${el.value}]]`)})}o[d.k]=el.value}
+save();if(d.t!=='c'){const sc=p.scenes[+d.i],pre=$('[data-pre]');if(pre)pre.textContent=P(sc,p)[S.tab[sc.id]||'image']}});
+</script></body></html>
